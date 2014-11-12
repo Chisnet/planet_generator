@@ -5,13 +5,13 @@ from PIL import Image
 
 """
 octaves: Number of passes of the algorithm
-frequency: 
-persistence: Amplitude of each pass of the algorithm relative to the last 
+frequency:
+persistence: Amplitude of each pass of the algorithm relative to the last
 lacunarity: Frequency of each pass of algorithm relatve to the last
 
-colour_ranges: A list of tuples defining the range cutofss for colours in the planet 
-               (cutoff, red_min, red_max, green_min, green_max, blue_min, blue_max)
-               The lowest possible cutoff will be used if there are several in the list
+colour_sets: A list of tuples defining the range cutofss for colours in the planet
+             (cutoff_start, cutoff_end, red_min, red_max, green_min, green_max, blue_min, blue_max)
+             The lowest possible cutoff will be used if there are several in the list
 """
 
 PLANET_TYPES = {
@@ -25,10 +25,10 @@ PLANET_TYPES = {
         'frequency_max': 32.0,
         'persistence': 0.5,
         'lacunarity': 2.0,
-        'colour_ranges': [
-            [(255, 0, 128, 0, 255, 0, 128)],
-            [(255, 0, 255, 0, 128, 0, 128)],
-            [(255, 0, 128, 0, 128, 0, 255)]
+        'colour_sets': [
+            [(0, 255, 0, 128, 0, 255, 0, 128)],  # Greenish
+            [(0, 255, 0, 255, 0, 128, 0, 128)],  # Redish
+            [(0, 255, 0, 128, 0, 128, 0, 255)],  # Blueish
         ]
     },
     'ice': {
@@ -53,9 +53,9 @@ def generate(planet_type, filename):
     seed = random.randrange(1, 256)
 
     # Pick a colour option to use
-    colour_range = random.choice(planet_values['colour_ranges'])
+    colour_set = random.choice(planet_values['colour_sets'])
 
-    print colour_range
+    print colour_set
 
     # Generate supersampled noise
     noise_array = []
@@ -64,7 +64,26 @@ def generate(planet_type, filename):
             # Value ranges between roughly 60 and 196 (for gas anyway)
             noise_value = int(pnoise2(x / freq, y / freq, octaves, planet_values['persistence'], planet_values['lacunarity'], width, height, seed) * 127.0 + 128.0)
             # Colouring - Temp
-            noise_array.append((noise_value / 2, noise_value, noise_value / 2))
+            for colour_range in colour_set:
+                range_start = colour_range[0]
+                range_end = colour_range[1]
+
+                if noise_value >= range_start and noise_value <= range_end:
+
+                    red_start = colour_range[2]
+                    red_end = colour_range[3]
+                    green_start = colour_range[4]
+                    green_end = colour_range[5]
+                    blue_start = colour_range[6]
+                    blue_end = colour_range[7]
+
+                    noise_range = range_end - range_start
+                    red_range = red_end - red_start
+                    green_range = green_end - green_start
+                    blue_range = blue_end - blue_start
+
+                    noise_array.append((noise_value / 2, noise_value, noise_value / 2))
+                    break
 
     # Generate image from noise
     image = Image.new('RGBA', (height, width))
