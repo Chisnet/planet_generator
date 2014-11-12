@@ -16,7 +16,20 @@ colour_sets: A list of tuples defining the range cutofss for colours in the plan
 
 PLANET_TYPES = {
     'temperate': {
-
+        'octaves_min': 8,
+        'octaves_max': 16,
+        'frequency_min': 24.0,
+        'frequency_max': 36.0,
+        'persistence': 0.5,
+        'lacunarity': 2.0,
+        'colour_sets': [
+            [
+                (0,   100, 0,   0,   0,   0,   0,   70 ),
+                (100, 130, 0,   0,   0,   0,   80,  110),
+                (130, 131, 90 , 130, 90,  130, 0,   0  ),
+                (131, 255, 0  , 30 , 60,  110, 0,   30 ),
+            ],
+        ]
     },
     'gas': {
         'octaves_min': 8,
@@ -52,10 +65,11 @@ def generate(planet_type, filename):
     freq = random.uniform(planet_values['frequency_min'], planet_values['frequency_max']) * octaves
     seed = random.randrange(1, 256)
 
+    print octaves
+    print freq
+
     # Pick a colour option to use
     colour_set = random.choice(planet_values['colour_sets'])
-
-    print colour_set
 
     # Generate supersampled noise
     noise_array = []
@@ -63,26 +77,26 @@ def generate(planet_type, filename):
         for x in range(width):
             # Value ranges between roughly 60 and 196 (for gas anyway)
             noise_value = int(pnoise2(x / freq, y / freq, octaves, planet_values['persistence'], planet_values['lacunarity'], width, height, seed) * 127.0 + 128.0)
-            # Colouring - Temp
+            # Colouring
             for colour_range in colour_set:
-                range_start = colour_range[0]
-                range_end = colour_range[1]
+                range_start = float(colour_range[0])
+                range_end = float(colour_range[1])
 
                 if noise_value >= range_start and noise_value <= range_end:
+                    red_start = float(colour_range[2])
+                    red_end = float(colour_range[3])
+                    green_start = float(colour_range[4])
+                    green_end = float(colour_range[5])
+                    blue_start = float(colour_range[6])
+                    blue_end = float(colour_range[7])
 
-                    red_start = colour_range[2]
-                    red_end = colour_range[3]
-                    green_start = colour_range[4]
-                    green_end = colour_range[5]
-                    blue_start = colour_range[6]
-                    blue_end = colour_range[7]
+                    noise_percent = (noise_value - range_start) / (range_end - range_start)
 
-                    noise_range = range_end - range_start
-                    red_range = red_end - red_start
-                    green_range = green_end - green_start
-                    blue_range = blue_end - blue_start
+                    red_value = int(red_start + (noise_percent * (red_end - red_start)))
+                    green_value = int(green_start + (noise_percent * (green_end - green_start)))
+                    blue_value = int(blue_start + (noise_percent * (blue_end - blue_start)))
 
-                    noise_array.append((noise_value / 2, noise_value, noise_value / 2))
+                    noise_array.append((red_value, green_value, blue_value))
                     break
 
     # Generate image from noise
@@ -106,4 +120,4 @@ def generate(planet_type, filename):
 
 if __name__ == "__main__":
     for x in range(1):
-        generate('gas', "test%s.png" % x)
+        generate('temperate', "test%s.png" % x)
