@@ -43,9 +43,26 @@ PLANET_TYPES = {
 
     },
     'lava': {
-
+        'octaves_min': 8,
+        'octaves_max': 16,
+        'frequency_min': 24.0,
+        'frequency_max': 36.0,
+        'persistence': 0.5,
+        'lacunarity': 2.0,
+        'colour_sets': [
+            [
+                (0, 1, 200, 100, 100, 0, 0, 0),         # Lava rivers
+                (1, 49, 10, 15, 10, 15, 10, 15),        # Dark rock
+                (49, 50, 200, 100, 100, 0, 0, 0),       # Lava rivers
+                (50, 99, 10, 15, 10, 15, 10, 15),       # Dark rock
+                (99, 100, 200, 100, 100, 0, 0, 0),      # Lava rivers
+                (100, 150, 15, 33, 15, 33, 15, 33),     # Light rock
+                (150, 170, 200, 100, 100, 0, 0, 0),     # Lava patches
+                (170, 255, 10, 23, 10, 23, 10, 23),     # Dark rock patches
+            ],
+        ]
     },
-    'dust': {
+    'desert': {
 
     }
 }

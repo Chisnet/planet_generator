@@ -12,6 +12,8 @@ from utils import spherize
 def generate(planet_type, filename):
     height = 1024
     width = 1024
+    planet_height = 1000
+    planet_width = 1000
 
     planet_values = PLANET_TYPES[planet_type]
     octaves = random.randrange(planet_values['octaves_min'], planet_values['octaves_max'])
@@ -23,8 +25,8 @@ def generate(planet_type, filename):
 
     # Generate supersampled noise
     noise_array = []
-    for y in range(height):
-        for x in range(width):
+    for y in range(planet_height):
+        for x in range(planet_width):
             # Value ranges between roughly 60 and 196 (for gas anyway)
             noise_value = int(pnoise2(x / freq, y / freq, octaves, planet_values['persistence'], planet_values['lacunarity'], width, height, seed) * 127.0 + 128.0)
             # Colouring
@@ -56,19 +58,27 @@ def generate(planet_type, filename):
                 noise_array.append((255, 255, 255, 0))
 
     # Generate image from noise
-    image = Image.new('RGBA', (width, height))
+    image = Image.new('RGBA', (planet_width, planet_height))
     image.putdata(noise_array)
 
     # Spherize
     image = spherize(image)
 
-    # Apply circle mask
-    temp = Image.new('RGBA', (width, height))
-    mask = Image.open('mask.png')
-    temp.paste(image, mask=mask)
-    image = temp
+    # Pad image to full size for masking
+    black = Image.new('RGB', (width, height))
+    black.paste(image, (12, 12))
+    image = black
 
-    # Lighten/Darken to create spherical appearance
+    # Apply shadow mask
+    temp = Image.new('RGB', (width, height))
+    mask = Image.open('shadow-mask.png')
+    temp.paste(image, mask=mask)
+
+    # Apply transparency mask
+    temp2 = Image.new('RGBA', (width, height))
+    mask2 = Image.open('transparency-mask.png')
+    temp2.paste(temp, mask=mask2)
+    image = temp2
 
     # Add atmosphere if applicable
 
@@ -81,4 +91,4 @@ def generate(planet_type, filename):
 
 if __name__ == "__main__":
     for x in range(1):
-        generate('temperate', "test%s.png" % x)
+        generate('lava', "../test%s.png" % x)
