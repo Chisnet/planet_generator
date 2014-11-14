@@ -1,30 +1,54 @@
 from __future__ import division
 
+import math
+import numpy
+
+from PIL import Image
+
 
 def spherize(image):
-    # height = image.size[1]
-    # width = image.size[0]
-    # half_width = width / 2
-    # half_height = height / 2
+    # Spherize based on: https://gist.github.com/kspi/2820038
+    a1 = numpy.array(image, dtype=numpy.double)
+    height, width, channels = a1.shape
+    a2 = numpy.zeros(a1.shape, dtype=numpy.double)
 
-    # https://gist.github.com/kspi/2820038
+    for y2 in range(height):
+        for x2 in range(width):
+            x1, y1 = map_coords(x2 / width * 2 - 1, y2 / height * 2 - 1)
+            a2[y2, x2] = sample(a1, (y1 * 0.5 + 0.5) * height, (x1 * 0.5 + 0.5) * width)
 
-    # x = 100
-    # y = 100
+    output_image = Image.fromarray(numpy.clip(a2, 0, 0xff).astype(numpy.uint8))
 
-    # r = math.sqrt(math.pow(x - half_width, 2) + math.pow(y - half_height, 2))
-    # a = math.atan2(y - half_height, x - half_width)
+    return output_image
 
-    # rnx = math.pow(r, 1) / half_width
-    # rny = math.pow(r, 1) / half_height
 
-    # new_x = rnx * math.cos(a) + half_width
-    # new_y = rny * math.sin(a) + half_height
+def map_coords(x2, y2):
+    r2 = math.sqrt(math.pow(x2, 2) + math.pow(y2, 2))
 
-    # print r
-    # print a
+    if r2 > 1:
+        x1 = x2
+        y1 = y2
+    else:
+        theta1 = math.atan2(y2, x2)
+        r1 = math.asin(r2) / (math.pi / 2)
+        x1 = r1 * math.cos(theta1)
+        y1 = r1 * math.sin(theta1)
 
-    # print new_x
-    # print new_y
+    return (x1, y1)
 
-    return image
+
+def black_bounds(f, x, y):
+    if 0 <= x < f.shape[0] and 0 <= y < f.shape[1]:
+        return f[x, y]
+    else:
+        return 0
+
+
+def sample(f, x, y):
+    x0 = int(x)
+    y0 = int(y)
+    x1 = x0 + 1
+    y1 = y0 + 1
+    fy0 = black_bounds(f, x0, y0) * (x1 - x) + black_bounds(f, x1, y0) * (x - x0)
+    fy1 = black_bounds(f, x0, y1) * (x1 - x) + black_bounds(f, x1, y1) * (x - x0)
+    return fy0 * (y1 - y) + fy1 * (y - y0)
