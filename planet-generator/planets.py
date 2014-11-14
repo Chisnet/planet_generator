@@ -4,9 +4,8 @@ frequency: Initial frequency of the noise
 persistence: Amplitude of each pass of the algorithm relative to the last
 lacunarity: Frequency of each pass of algorithm relative to the last
 
-colour_sets: A list of tuples defining the range cutofss for colours in the planet
-             (cutoff_start, cutoff_end, red_min, red_max, green_min, green_max, blue_min, blue_max)
-             The lowest possible cutoff will be used if there are several in the list
+render_sets: A list of render variables defining the layers of the planet render, the order of those
+             layers, and the settings for each type of layer (contour or rivers)
 """
 
 PLANET_TYPES = {
@@ -17,13 +16,27 @@ PLANET_TYPES = {
         'frequency_max': 36.0,
         'persistence': 0.5,
         'lacunarity': 2.0,
-        'colour_sets': [
-            [
-                (0, 100, 0, 0, 0, 0, 0, 70),         # Deep sea
-                (100, 130, 0, 0, 0, 0, 80, 110),     # Shallow sea
-                (130, 131, 90, 130, 90, 130, 0, 0),  # Sandy shore
-                (131, 255, 0, 30, 60, 110, 0, 30),   # Land
-            ],
+        'render_sets': [
+            {
+                'name': 'earthlike',
+                'layers': {
+                    'sea': {
+                        'type': 'contour',
+                        'ranges': [
+                            (0, 100, 0, 0, 0, 0, 0, 70),      # Deep sea
+                            (100, 130, 0, 0, 0, 0, 80, 110),  # Shallow sea
+                        ]
+                    },
+                    'land': {
+                        'type': 'contour',
+                        'ranges': [
+                            (130, 131, 90, 110, 90, 110, 0, 0),  # Sandy shore
+                            (131, 255, 0, 30, 60, 110, 0, 30),   # Land
+                        ]
+                    }
+                },
+                'layer_order': ['land', 'sea']
+            }
         ]
     },
     'gas': {
@@ -33,10 +46,43 @@ PLANET_TYPES = {
         'frequency_max': 32.0,
         'persistence': 0.5,
         'lacunarity': 2.0,
-        'colour_sets': [
-            [(0, 255, 0, 128, 0, 255, 0, 128)],  # Greenish
-            [(0, 255, 0, 255, 0, 128, 0, 128)],  # Redish
-            [(0, 255, 0, 128, 0, 128, 0, 255)],  # Blueish
+        'render_sets': [
+            {
+                'name': 'red',
+                'layers': {
+                    'gas': {
+                        'type': 'contour',
+                        'ranges': [
+                            (0, 255, 0, 255, 0, 128, 0, 128),  # Gas
+                        ]
+                    }
+                },
+                'layer_order': ['gas']
+            },
+            {
+                'name': 'green',
+                'layers': {
+                    'gas': {
+                        'type': 'contour',
+                        'ranges': [
+                            (0, 255, 0, 128, 0, 255, 0, 128),  # Gas
+                        ]
+                    }
+                },
+                'layer_order': ['gas']
+            },
+            {
+                'name': 'blue',
+                'layers': {
+                    'gas': {
+                        'type': 'contour',
+                        'ranges': [
+                            (0, 255, 0, 128, 0, 128, 0, 255),  # Gas
+                        ]
+                    }
+                },
+                'layer_order': ['gas']
+            },
         ]
     },
     'ice': {
@@ -49,17 +95,23 @@ PLANET_TYPES = {
         'frequency_max': 36.0,
         'persistence': 0.5,
         'lacunarity': 2.0,
-        'colour_sets': [
-            [
-                (0, 1, 200, 100, 100, 0, 0, 0),         # Lava rivers
-                (1, 49, 10, 15, 10, 15, 10, 15),        # Dark rock
-                (49, 50, 200, 100, 100, 0, 0, 0),       # Lava rivers
-                (50, 99, 10, 15, 10, 15, 10, 15),       # Dark rock
-                (99, 100, 200, 100, 100, 0, 0, 0),      # Lava rivers
-                (100, 150, 15, 33, 15, 33, 15, 33),     # Light rock
-                (150, 170, 200, 100, 100, 0, 0, 0),     # Lava patches
-                (170, 255, 10, 23, 10, 23, 10, 23),     # Dark rock patches
-            ],
+        'render_sets': [
+            {
+                'name': 'standard',
+                'layers': {
+                    'surface': {
+                        'type': 'contour',
+                        'ranges': [
+                            (0, 90, 10, 15, 10, 15, 10, 15),     # Dark rock
+                            (90, 110, 100, 200, 0, 100, 0, 0),   # Lava patches
+                            (110, 150, 15, 33, 15, 33, 15, 33),  # Light rock
+                            (150, 170, 200, 100, 100, 0, 0, 0),  # Lava patches
+                            (170, 255, 10, 23, 10, 23, 10, 23),  # Dark rock patches
+                        ]
+                    }
+                },
+                'layer_order': ['surface']
+            },
         ]
     },
     'desert': {
