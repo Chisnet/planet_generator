@@ -25,6 +25,7 @@ def generate(planet_type, filename):
     planet_values = PLANET_TYPES[planet_type]
     octaves = random.randrange(planet_values['octaves_min'], planet_values['octaves_max'])
     freq = random.uniform(planet_values['frequency_min'], planet_values['frequency_max']) * octaves
+    apply_shadow = planet_values.get('shadow', True)
 
     # Pick a render set to use
     render_set = random.choice(planet_values['render_sets'])
@@ -56,9 +57,12 @@ def generate(planet_type, filename):
 
     # Apply shadow mask
     print "Applying masks..."
-    temp = Image.new('RGB', (width, height))
-    mask = Image.open('shadow-mask.png')
-    temp.paste(image, mask=mask)
+    if apply_shadow:
+        temp = Image.new('RGB', (width, height))
+        mask = Image.open('shadow-mask.png')
+        temp.paste(image, mask=mask)
+    else:
+        temp = image
 
     # Apply transparency mask
     temp2 = Image.new('RGBA', (width, height))
@@ -153,4 +157,5 @@ def generate_rivers(image, noise, paths):
 
 if __name__ == "__main__":
     for x in range(1):
-        generate('ice', "../test%s.png" % x)
+        print "Generating celestial body %d..." % x
+        generate('star', "../test%s.png" % x)

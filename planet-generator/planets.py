@@ -159,5 +159,71 @@ PLANET_TYPES = {
     },
     'desert': {
 
+    },
+    'star': {
+        'octaves_min': 3,
+        'octaves_max': 6,
+        'frequency_min': 9.0,
+        'frequency_max': 16.0,
+        'persistence': 0.5,
+        'lacunarity': 4.0,
+        'render_sets': [
+            {
+                'name': 'G-class Main Sequence',  # Yellow-White
+                'layers': {
+                    'surface': {
+                        'type': 'contour',
+                        'ranges': [
+                            (0, 50, 255, 255, 240, 245, 225, 235),     # Main body colour
+                            (50, 90, 255, 255, 230, 240, 205, 225),    # Highlights
+                            (90, 140, 255, 255, 240, 245, 225, 235),   # Main body colour
+                            (140, 200, 255, 255, 230, 240, 205, 225),  # Highlights
+                            (200, 255, 255, 255, 240, 245, 225, 235),  # Main body colour
+                        ]
+                    }
+                },
+                'layer_order': ['surface']
+            },
+            {
+                'name': 'M-class Main Sequence',  # Light Orange
+                'layers': {
+                    'surface': {
+                        'type': 'contour',
+                        'ranges': [
+                            (0, 50, 255, 255, 190, 185, 120, 130),     # Main body colour
+                            (50, 90, 255, 255, 180, 190, 100, 120),    # Highlights
+                            (90, 140, 255, 255, 190, 185, 120, 130),   # Main body colour
+                            (140, 200, 255, 255, 180, 190, 100, 120),  # Highlights
+                            (200, 255, 255, 255, 190, 185, 120, 130),  # Main body colour
+                        ]
+                    }
+                },
+                'layer_order': ['surface']
+            }
+        ],
+        'shadow': False
     }
 }
+
+
+# Stellar Colours (Main Sequence) - http://www.vendian.org/mncharity/dir3/starcolor/
+
+# O5(V)       157 180 255   #9db4ff
+
+# B1(V)       162 185 255   #a2b9ff
+# B3(V)       167 188 255   #a7bcff
+# B5(V)       170 191 255   #aabfff
+# B8(V)       175 195 255   #afc3ff
+
+# A1(V)       186 204 255   #baccff
+# A3(V)       192 209 255   #c0d1ff
+# A5(V)       202 216 255   #cad8ff
+
+# F0(V)       228 232 255   #e4e8ff
+# F2(V)       237 238 255   #edeeff
+# F5(V)       251 248 255   #fbf8ff
+# F8(V)       255 249 249   #fff9f9
+
+# K0(V)       255 235 209   #ffebd1
+# K4(V)       255 215 174   #ffd7ae
+# K7(V)       255 198 144   #ffc690
