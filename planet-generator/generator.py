@@ -13,8 +13,8 @@ MAX_ITERATIONS = 50
 
 
 def generate(planet_type, filename):
-    height = 1024
-    width = 1024
+    height = 1080
+    width = 1080
     planet_height = 1000
     planet_width = 1000
 
@@ -52,7 +52,7 @@ def generate(planet_type, filename):
 
     # Pad image to full size for masking
     black = Image.new('RGB', (width, height))
-    black.paste(image, (12, 12))
+    black.paste(image, (40, 40))
     image = black
 
     # Apply shadow mask
@@ -71,6 +71,10 @@ def generate(planet_type, filename):
     image = temp2
 
     # Add atmosphere if applicable
+    atmo = Image.open('atmosphere.png')
+    atmo_mask = Image.new('L', (width, height))
+    atmo_mask.paste(atmo)
+    image.paste(atmo, mask=atmo_mask)
 
     # Downsample - resize it with filter=Image.ANTIALIAS
     print "Downsampling..."
@@ -158,4 +162,4 @@ def generate_rivers(image, noise, paths):
 if __name__ == "__main__":
     for x in range(1):
         print "Generating celestial body %d..." % x
-        generate('star', "../test%s.png" % x)
+        generate('ice', "../test%s.png" % x)
