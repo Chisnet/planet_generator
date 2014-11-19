@@ -143,23 +143,28 @@ def generate_rivers(image, noise, paths):
 
     iterations = 0
 
-    # while path_count > 0 and iterations <= MAX_ITERATIONS:
-    #     successful_path = False
+    while path_count > 0 and iterations <= MAX_ITERATIONS:
+        successful_path = False
 
-    #     # Find a suitable ending point for the river
-    #     start_pos = random.randrange(0, (width * height) - 1)
-    #     while (noise[start_pos] < paths['end_min'] and noise[start_pos] > paths['end_max']) and (start_pos < (width * height) -1):
-    #         start_pos += 1
+        # Find a suitable ending point for the river
+        start_pos = random.randrange(0, (width * height) - 1)
+        while (noise[start_pos] < paths['end_min'] and noise[start_pos] > paths['end_max']) and (start_pos < (width * height) - 1):
+            start_pos += 1
 
-    #     if (noise[start_pos] > paths['end_min'] and noise[start_pos] < paths['end_max']):
-    #         river_steps = 0
+        if (noise[start_pos] > paths['end_min'] and noise[start_pos] < paths['end_max']):
+            river_steps = 0
+            image.putpixel((500, 500), (255, 255, 255))
+            image.putpixel((500, 501), (255, 255, 255))
+            image.putpixel((501, 500), (255, 255, 255))
+            image.putpixel((501, 501), (255, 255, 255))
+            successful_path = True
 
-    #     if successful_path:
-    #         path_count -= 1
-    #     iterations += 1
+        if successful_path:
+            path_count -= 1
+        iterations += 1
 
 
 if __name__ == "__main__":
     for x in range(1):
         print "Generating celestial body %d..." % x
-        generate('ice', "../test%s.png" % x)
+        generate('lava', "../test%s.png" % x)

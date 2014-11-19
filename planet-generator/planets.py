@@ -151,9 +151,23 @@ PLANET_TYPES = {
                             (150, 170, 200, 100, 100, 0, 0, 0),  # Lava patches
                             (170, 255, 10, 23, 10, 23, 10, 23),  # Dark rock patches
                         ]
+                    },
+                    'rivers': {
+                        'type': 'river',
+                        'paths': {
+                            'start_min': 150,
+                            'start_max': 200,
+                            'end_min': 120,
+                            'end_max': 130,
+                            'colour_start': (0, 20, 130, 255),
+                            'colour_end': (0, 0, 110, 255),
+                            'count_min': 5,
+                            'count_max': 10,
+                            'smooth': False,
+                        }
                     }
                 },
-                'layer_order': ['surface']
+                'layer_order': ['surface', 'rivers']
             },
         ]
     },
