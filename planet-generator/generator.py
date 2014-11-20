@@ -162,4 +162,4 @@ def generate_rivers(image, noise, paths):
 if __name__ == "__main__":
     for x in range(1):
         print "Generating celestial body %d..." % x
-        generate('ice', "../test%s.png" % x)
+        generate('lava', "../test%s.png" % x)
