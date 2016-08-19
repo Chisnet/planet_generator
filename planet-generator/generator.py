@@ -1,6 +1,8 @@
 from __future__ import division
 
+import getopt
 import random
+import sys
 
 from noise import pnoise2
 from PIL import Image
@@ -10,6 +12,34 @@ from utils import spherize
 
 
 MAX_ITERATIONS = 50
+
+
+def main(argv):
+    planet_type = None
+    planet_count = 1
+
+    # Read options
+    try:
+        opts, args = getopt.getopt(argv, "t:n:", ["type", "number"])
+    except getopt.GetoptError:
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt in ("-t", "--type"):
+            planet_type = arg
+        if opt in ("-n", "--number"):
+            planet_count = arg
+
+    if not planet_type:
+        sys.exit()
+    try:
+        planet_count = int(planet_count)
+    except:
+        sys.exit()
+
+    # Generate!
+    for planet_num in range(planet_count):
+        print "Generating celestial body %d..." % (planet_num + 1)
+        generate(planet_type, "../test%s.png" % (planet_num + 1))
 
 
 def generate(planet_type, filename):
@@ -158,8 +188,5 @@ def generate_rivers(image, noise, paths):
     #         path_count -= 1
     #     iterations += 1
 
-
 if __name__ == "__main__":
-    for x in range(1):
-        print "Generating celestial body %d..." % x
-        generate('lava', "../test%s.png" % x)
+    main(sys.argv[1:])
