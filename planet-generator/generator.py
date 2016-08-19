@@ -64,20 +64,20 @@ def generate(planet_type, filename):
     image = Image.new('RGBA', (planet_width, planet_height))
 
     # Generate noise
-    print "Generating noise..."
+    print("Generating noise...")
     noise = generate_noise(freq, octaves, planet_values['persistence'], planet_values['lacunarity'], planet_width, planet_height, seed)
 
     # Loop over the layers
     for layer_name in render_set['layer_order']:
         layer = render_set['layers'][layer_name]
-        print "Generating %s layer..." % layer_name
+        print("Generating %s layer..." % layer_name)
         if layer['type'] == 'contour':
             generate_contours(image, noise, layer['ranges'])
         elif layer['type'] == 'river':
             generate_rivers(image, noise, layer['paths'])
 
     # Spherize
-    print "Spherizing image..."
+    print("Spherizing image...")
     image = spherize(image)
 
     # Pad image to full size for masking
@@ -86,7 +86,7 @@ def generate(planet_type, filename):
     image = black
 
     # Apply shadow mask
-    print "Applying masks..."
+    print("Applying masks...")
     if apply_shadow:
         temp = Image.new('RGB', (width, height))
         mask = Image.open('shadow-mask.png')
@@ -107,11 +107,11 @@ def generate(planet_type, filename):
     image.paste(atmo, mask=atmo_mask)
 
     # Downsample - resize it with filter=Image.ANTIALIAS
-    print "Downsampling..."
+    print("Downsampling...")
     image = image.resize((int(width / 2), int(width / 2)), Image.ANTIALIAS)
 
     # Save image
-    print "Saving..."
+    print("Saving...")
     image.save(filename)
 
 
