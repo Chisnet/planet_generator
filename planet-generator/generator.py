@@ -1,5 +1,3 @@
-from __future__ import division
-
 import getopt
 import random
 import sys
@@ -22,6 +20,7 @@ def main(argv):
     try:
         opts, args = getopt.getopt(argv, "t:n:", ["type", "number"])
     except getopt.GetoptError:
+        print("Error! Invalid or missing options provided.")
         sys.exit(2)
     for opt, arg in opts:
         if opt in ("-t", "--type"):
@@ -30,15 +29,17 @@ def main(argv):
             planet_count = arg
 
     if not planet_type:
+        print("Error! Planet type not provided.")
         sys.exit()
     try:
         planet_count = int(planet_count)
-    except:
+    except TypeError:
+        print("Error! Invalid planet count.")
         sys.exit()
 
     # Generate!
     for planet_num in range(planet_count):
-        print "Generating celestial body %d..." % (planet_num + 1)
+        print(f"Generating celestial body {planet_num+1}...")
         generate(planet_type, "../test%s.png" % (planet_num + 1))
 
 
@@ -70,7 +71,7 @@ def generate(planet_type, filename):
     # Loop over the layers
     for layer_name in render_set['layer_order']:
         layer = render_set['layers'][layer_name]
-        print("Generating %s layer..." % layer_name)
+        print(f"Generating {layer_name} layer...")
         if layer['type'] == 'contour':
             generate_contours(image, noise, layer['ranges'])
         elif layer['type'] == 'river':
