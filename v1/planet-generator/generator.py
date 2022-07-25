@@ -5,7 +5,6 @@ from pathlib import Path
 
 from noise import pnoise2
 from PIL import Image
-
 from planets import PLANET_TYPES
 from utils import spherize
 
@@ -76,8 +75,6 @@ def generate(planet_type, filename):
         print(f"Generating {layer_name} layer...")
         if layer['type'] == 'contour':
             generate_contours(image, noise, layer['ranges'])
-        elif layer['type'] == 'river':
-            generate_rivers(image, noise, layer['paths'])
 
     # Spherize
     print("Spherizing image...")
@@ -167,29 +164,6 @@ def generate_contours(image, noise, ranges):
 
     image.paste(temp_image, temp_image)
 
-
-def generate_rivers(image, noise, paths):
-    # Takes random greyscale noise and draws downhill paths
-    width, height = image.size
-
-    path_count = random.randrange(paths['count_min'], paths['count_max'])
-
-    iterations = 0
-
-    # while path_count > 0 and iterations <= MAX_ITERATIONS:
-    #     successful_path = False
-
-    #     # Find a suitable ending point for the river
-    #     start_pos = random.randrange(0, (width * height) - 1)
-    #     while (noise[start_pos] < paths['end_min'] and noise[start_pos] > paths['end_max']) and (start_pos < (width * height) -1):
-    #         start_pos += 1
-
-    #     if (noise[start_pos] > paths['end_min'] and noise[start_pos] < paths['end_max']):
-    #         river_steps = 0
-
-    #     if successful_path:
-    #         path_count -= 1
-    #     iterations += 1
 
 if __name__ == "__main__":
     main(sys.argv[1:])

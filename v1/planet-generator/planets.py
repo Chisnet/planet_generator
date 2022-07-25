@@ -5,7 +5,7 @@ persistence: Amplitude of each pass of the algorithm relative to the last
 lacunarity: Frequency of each pass of algorithm relative to the last
 
 render_sets: A list of render variables defining the layers of the planet render, the order of those
-             layers, and the settings for each type of layer (contour or rivers)
+             layers, and the settings for each type of layer
 """
 
 PLANET_TYPES = {
@@ -33,23 +33,9 @@ PLANET_TYPES = {
                             (130, 131, 90, 110, 90, 110, 0, 0),  # Sandy shore
                             (131, 255, 0, 30, 60, 110, 0, 30),   # Land
                         ]
-                    },
-                    'rivers': {
-                        'type': 'river',
-                        'paths': {
-                            'start_min': 150,
-                            'start_max': 200,
-                            'end_min': 120,
-                            'end_max': 130,
-                            'colour_start': (0, 20, 130, 255),
-                            'colour_end': (0, 0, 110, 255),
-                            'count_min': 5,
-                            'count_max': 10,
-                            'smooth': True,
-                        }
                     }
                 },
-                'layer_order': ['land', 'rivers', 'sea']
+                'layer_order': ['land', 'sea']
             }
         ]
     },
