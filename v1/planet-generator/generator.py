@@ -1,6 +1,7 @@
 import getopt
 import random
 import sys
+from pathlib import Path
 
 from noise import pnoise2
 from PIL import Image
@@ -8,8 +9,9 @@ from PIL import Image
 from planets import PLANET_TYPES
 from utils import spherize
 
-
 MAX_ITERATIONS = 50
+
+script_dir = Path(__file__).absolute().parent
 
 
 def main(argv):
@@ -90,30 +92,30 @@ def generate(planet_type, filename):
     print("Applying masks...")
     if apply_shadow:
         temp = Image.new('RGB', (width, height))
-        mask = Image.open('shadow-mask.png')
+        mask = Image.open(f'{script_dir}/shadow-mask.png')
         temp.paste(image, mask=mask)
     else:
         temp = image
 
     # Apply transparency mask
     temp2 = Image.new('RGBA', (width, height))
-    mask2 = Image.open('transparency-mask.png')
+    mask2 = Image.open(f'{script_dir}/transparency-mask.png')
     temp2.paste(temp, mask=mask2)
     image = temp2
 
     # Add atmosphere if applicable
-    atmo = Image.open('atmosphere.png')
+    atmo = Image.open(f'{script_dir}/atmosphere.png')
     atmo_mask = Image.new('L', (width, height))
     atmo_mask.paste(atmo)
     image.paste(atmo, mask=atmo_mask)
 
     # Downsample - resize it with filter=Image.ANTIALIAS
     print("Downsampling...")
-    image = image.resize((int(width / 2), int(width / 2)), Image.ANTIALIAS)
+    image = image.resize((int(width / 2), int(width / 2)))
 
     # Save image
     print("Saving...")
-    image.save(filename)
+    image.save(f'{script_dir}/{filename}')
 
 
 def generate_noise(freq, octaves, persistence, lacunarity, width, height, seed):
