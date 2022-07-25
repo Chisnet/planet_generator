@@ -1,0 +1,19 @@
+[flake8]
+max-line-length = 88
+max-complexity = 13
+
+exclude =
+    .git
+    __pycache__
+    dist
+    build
+    ext
+    *migrations/
+    *settings
+
+ignore =
+    E203
+    E266
+    E501
+    W503
+
