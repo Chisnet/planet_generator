@@ -1,0 +1,18 @@
+body {
+    color: #fff;
+    background-color: #000;
+    font: 12pt sans-serif;
+    line-height: 1.5em; padding: 0;
+    margin: 0;
+}
+
+#container {
+    position:fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
